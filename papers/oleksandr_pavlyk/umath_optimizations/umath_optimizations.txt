@@ -2,7 +2,9 @@ One of the great benefits found in our Intel® Distribution for Python is the per
 NumPy’s UMath arithmetic and transcendental operations, on a range of Intel CPUs, from Intel® Core™ to Intel® Xeon™ & Intel® Xeon Phi™. With stock python
 as our baseline, we demonstrate the scalability of Intel® Distribution for Python by using functions that are intensively used in financial math applications
 and machine learning:
-
+.. figure:: speedup1.png
+.. figure:: speedup2.png
+.. figure:: speedup3.png
 
 One can see that stock Python (pip-installed NumPy from PyPI) on Intel® Core™ i5 performs basic operations such as addition, subtraction, and multiplication
 just as well as Intel Python, but not on Intel® Xeon™ and Intel® Xeon Phi™, where Intel Python adds at least another 10x speedup. This can be explained by the
@@ -23,6 +25,8 @@ Xeon Phi® relative to Xeon is explained by larger number of cores (64 in our set
 
 The following charts provide another view of Intel Python performance versus stock Python on arithmetic and transcendental vector operations in NumPy by measuring
 how close UMath performance is to respective native MKL call:
+.. figure:: native_c_comp1.png
+.. figure:: native_c_comp2.png
   
 Again on Intel® Core™ i5 the stock Python performs well on basic operations (due to hard-coded AVX intrinsics and because multi-threading from Intel Python does not
 add much on basic operations) but does not scale on transcendentals (loops with transcendentals are not vectorized in stock Python). Intel Python delivers performance
@@ -31,6 +35,9 @@ close to native speeds (90% of MKL) on relatively big problem sizes.
 
 
 A Python implementation of the Black Scholes formula gives an idea of how NumPy UMath optimizations can be noticed on the application level:
+.. figure:: black_scholes1.png
+.. figure:: black_scholes2.png
+.. figure:: black_scholes3.png
 
 
 One can see that on Intel® Core™ i5 the Black Scholes Formula scales nicely with Intel Python on small problem sizes but does not perform well on bigger problem sizes,
