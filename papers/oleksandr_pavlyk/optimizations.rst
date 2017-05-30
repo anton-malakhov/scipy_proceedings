@@ -59,7 +59,7 @@ In addition to initial Fast Fourier Transforms (FFT) optimizations offered in pr
 Arithmetic and transcendental expressions
 -----------------------------------------
 
-.. include:: umath_optimizations/umath_optimizations.txt
+.. include:: umath_optimizations/umath_optimizations.rst
 
 
 
