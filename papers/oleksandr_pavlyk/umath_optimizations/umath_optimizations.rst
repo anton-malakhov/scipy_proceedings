@@ -55,8 +55,10 @@ big problem sizes.
 
 
 
-A Python implementation of the Black Scholes formula gives an idea of how NumPy UMath optimizations
-can be noticed on the application level:
+To demonstrate the benefits of vectorization and multi-threading in a real-world application, we
+chose to use the Black Scholes model, often used to estimate the price of financial derivatives
+like stock options. A Python implementation of the Black Scholes formula gives an idea of how NumPy
+UMath optimizations can be noticed on the application level:
 
 .. figure:: black_scholes1.png
 
