@@ -73,7 +73,7 @@ The most significant improvements in memory optimizations in Update 2 comes from
 Faster Machine Learning with Scikit-learn
 -----------------------------------------
 
-.. include:: sklearn.rst
+.. include:: sklearn.txt
 
 Numba vectorization
 -------------------
