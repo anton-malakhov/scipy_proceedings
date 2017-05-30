@@ -64,11 +64,11 @@ NumPy’s UMath arithmetic and transcendental operations, on a range of Intel CP
 as our baseline, we demonstrate the scalability of Intel® Distribution for Python by using functions that are intensively used in financial math applications
 and machine learning:
 
-.. figure:: umath_optimizations/speedup1.png
+.. figure:: umath_speedup1.png
 
-.. figure:: umath_optimizations/speedup2.png
+.. figure:: umath_speedup2.png
 
-.. figure:: umath_optimizations/speedup3.png
+.. figure:: umath_speedup3.png
 
 
 One can see that stock Python (pip-installed NumPy from PyPI) on Intel® Core™ i5 performs basic operations such as addition, subtraction, and multiplication
@@ -91,9 +91,9 @@ Xeon Phi® relative to Xeon is explained by larger number of cores (64 in our se
 The following charts provide another view of Intel Python performance versus stock Python on arithmetic and transcendental vector operations in NumPy by measuring
 how close UMath performance is to respective native MKL call:
 
-.. figure:: umath_optimizations/native_c_comp1.png
+.. figure:: umath_native_c_comp1.png
 
-.. figure:: umath_optimizations/native_c_comp2.png
+.. figure:: umath_native_c_comp2.png
 
   
 Again on Intel® Core™ i5 the stock Python performs well on basic operations (due to hard-coded AVX intrinsics and because multi-threading from Intel Python does not
@@ -104,11 +104,11 @@ close to native speeds (90% of MKL) on relatively big problem sizes.
 
 A Python implementation of the Black Scholes formula gives an idea of how NumPy UMath optimizations can be noticed on the application level:
 
-.. figure:: umath_optimizations/black_scholes1.png
+.. figure:: umath_black_scholes1.png
 
-.. figure:: umath_optimizations/black_scholes2.png
+.. figure:: umath_black_scholes2.png
 
-.. figure:: umath_optimizations/black_scholes3.png
+.. figure:: umath_black_scholes3.png
 
 
 
