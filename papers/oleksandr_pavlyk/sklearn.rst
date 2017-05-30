@@ -123,8 +123,8 @@ We compared the similar runs for other algorithms and normalized results by resu
 .. figure:: sklearn_perf.jpg 
 
 
-You can find some benchmarks
+You can find some benchmarks [sklearn_benches]_
 
 
-.. _there: https://github.com/dvnagorny/sklearn_benchs
+.. [sklearn_benches] https://github.com/dvnagorny/sklearn_benchs
 
