@@ -2,7 +2,7 @@ Thin wrapper exposing Intel |R| MKL's FFT functionality directly on NumPy arrays
 It allows FFT-based Python programs to approach performance of equivalent C implementations. 
 
 .. provide charts of Python code performance in terms of percent of native performance [ reuse charts for Haswell from release notes ]
-.. figure:: FFT_perf_pecent_native_u2.png
+.. figure:: FFT_perf_percent_native_u2.png
 
 Thanks to Intel |R| MKL's flexibility in its supports for arbitrarily strided input and output arrays [1]_ both one-dimensional and 
 multi-dimensional complex Fast Fourier Transforms along distinct axes can be performed directly, without the need to copy the input 
