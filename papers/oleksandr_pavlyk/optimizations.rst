@@ -93,7 +93,7 @@ Faster Machine Learning with Scikit-learn
 Numba vectorization
 -------------------
 
-.. include:: papers/oleksandr_pavlyk/numba/numba.rst
+.. include:: papers/oleksandr_pavlyk/numba/svml.rst
 
 Auto-parallelization for Numba
 ------------------------------
