@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 __all__ = ['writer']
 
 import docutils.core as dc
@@ -56,20 +58,19 @@ class Translator(LaTeXTranslator):
         self.figure_alignment = 'left'
         self.table_type = 'table'
 
-        self.active_table.set_table_style('booktabs')
+        try:
+            self.active_table.set_table_style('booktabs')
+        except TypeError:
+            raise("You are running into an error because you are using docutils "
+                  "version {}, instead please install docutils version {}".format(
+                      dc.__version__, '0.12.0'
+                      )
+                  )
 
     def visit_docinfo(self, node):
         pass
 
     def depart_docinfo(self, node):
-        pass
-
-    def visit_author(self, node):
-        self.author_names.append(self.encode(node.astext()))
-        self.author_institution_map[self.author_names[-1]] = []
-        raise nodes.SkipNode
-
-    def depart_author(self, node):
         pass
 
     def visit_author(self, node):
@@ -122,6 +123,16 @@ class Translator(LaTeXTranslator):
     def depart_field_body(self, node):
         raise nodes.SkipNode
 
+
+    def footmark(self, n):
+        '''Insert footmark #n.  Footmark 1 is reserved for
+        the corresponding author. Footmark 2 is reserved for
+        the equal contributors.\
+        '''
+        return ('\\setcounter{footnotecounter}{%d}' % n,
+                '\\fnsymbol{footnotecounter}')
+
+
     def depart_document(self, node):
         LaTeXTranslator.depart_document(self, node)
 
@@ -133,24 +144,17 @@ class Translator(LaTeXTranslator):
             for inst in self.author_institution_map[auth]:
                 institution_authors.setdefault(inst, []).append(auth)
 
-        def footmark(n):
-            """Insert footmark #n.  Footmark 1 is reserved for
-            the corresponding author. Footmark 2 is reserved for
-            the equal contributors.\
-            """
-            return ('\\setcounter{footnotecounter}{%d}' % n,
-                    '\\fnsymbol{footnotecounter}')
 
         # Build a footmark for the corresponding author
-        corresponding_footmark = footmark(1)
+        corresponding_footmark = self.footmark(1)
 
         # Build a footmark for equal contributors
-        equal_footmark = footmark(2)
+        equal_footmark = self.footmark(2)
 
         # Build one footmark for each institution
         institute_footmark = {}
         for i, inst in enumerate(institution_authors):
-            institute_footmark[inst] = footmark(i + 3)
+            institute_footmark[inst] = self.footmark(i + 3)
 
         footmark_template = r'\thanks{%(footmark)s %(instutions)}'
         corresponding_auth_template = r'''%%
@@ -236,7 +240,7 @@ class Translator(LaTeXTranslator):
         if not self.video_url:
             video_template = ''
         else:
-            video_template = r'\\\vspace{5mm}\tt\url{%s}\vspace{-5mm}' % self.video_url
+            video_template = '\\\\\\vspace{5mm}\\tt\\url{%s}\\vspace{-5mm}' % self.video_url
 
         title_template = r'\newcounter{footnotecounter}' \
                 r'\title{%s}\author{%s' \
@@ -258,6 +262,7 @@ class Translator(LaTeXTranslator):
                                'author': self.author_names,
                                'author_email': self.author_emails,
                                'author_institution': self.author_institutions,
+                               'author_institution_map' : self.author_institution_map,
                                'abstract': self.abstract_text,
                                'keywords': self.keywords,
                                'copyright_holder': copyright_holder,
@@ -281,9 +286,9 @@ class Translator(LaTeXTranslator):
         if self.section_level == 1:
             if self.paper_title:
                 import warnings
-                warnings.warn(RuntimeWarning("Title set twice--ignored. "
-                                             "Could be due to ReST"
-                                             "error.)"))
+                warnings.warn(RuntimeWarning('Title set twice--ignored. '
+                                             'Could be due to ReST'
+                                             'error.)'))
             else:
                 self.paper_title = self.encode(node.astext())
             raise nodes.SkipNode
@@ -367,7 +372,7 @@ class Translator(LaTeXTranslator):
             node.append(nodes.label(text='_abcdefghijklmno_'))
 
         # Work-around for a bug in docutils where
-        # "%" is prepended to footnote text
+        # '%' is prepended to footnote text
         LaTeXTranslator.visit_footnote(self, node)
         self.out[-1] = self.out[1].strip('%')
 
@@ -436,8 +441,8 @@ class Translator(LaTeXTranslator):
                                            linenostart=linenostart,
                                            verboptions=extra_opts))
 
-            self.out.append("\\vspace{1mm}\n" + tex +
-                            "\\vspace{1mm}\n")
+            self.out.append('\\vspace{1mm}\n' + tex +
+                            '\\vspace{1mm}\n')
             raise nodes.SkipNode
         else:
             LaTeXTranslator.visit_literal_block(self, node)
@@ -458,21 +463,21 @@ class Translator(LaTeXTranslator):
     # Math directives from rstex
 
     def visit_InlineMath(self, node):
-        self.requirements['amsmath'] = r'\usepackage{amsmath}'
+        self.requirements['amsmath'] = '\\usepackage{amsmath}'
         self.out.append('$' + node['latex'] + '$')
         raise nodes.SkipNode
 
     def visit_PartMath(self, node):
-        self.requirements['amsmath'] = r'\usepackage{amsmath}'
+        self.requirements['amsmath'] = '\\usepackage{amsmath}'
         self.out.append(mathEnv(node['latex'], node['label'], node['type']))
         self.non_breaking_paragraph = True
         raise nodes.SkipNode
 
     def visit_PartLaTeX(self, node):
-        if node["usepackage"]:
-            for package in node["usepackage"]:
-                self.requirements[package] = r'\usepackage{%s}' % package
-        self.out.append("\n" + node['latex'] + "\n")
+        if node['usepackage']:
+            for package in node['usepackage']:
+                self.requirements[package] = '\\usepackage{%s}' % package
+        self.out.append('\n' + node['latex'] + '\n')
         raise nodes.SkipNode
 
 

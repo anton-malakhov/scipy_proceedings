@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import docutils.core as dc
 import os.path
@@ -8,6 +8,8 @@ import re
 import tempfile
 import glob
 import shutil
+import io
+
 from distutils import dir_util
 
 from writer import writer
@@ -48,7 +50,7 @@ def rst2tex(in_path, out_path):
     shutil.copy(scipy_status, out_path)
     scipy_style = os.path.join(base_dir, '_static/scipy.sty')
     shutil.copy(scipy_style, out_path)
-    preamble = r'''\usepackage{scipy}'''
+    preamble = u'''\\usepackage{scipy}'''
 
     # Add the LaTeX commands required by Pygments to do syntax highlighting
 
@@ -81,12 +83,11 @@ def rst2tex(in_path, out_path):
         raise RuntimeError("Found more than one input .rst--not sure which "
                            "one to use.")
 
-
-    content = header + open(rst, 'r').read()
-
+    with io.open(rst, mode='r') as f:
+        content = header + f.read()
+    
     tex = dc.publish_string(source=content, writer=writer,
                             settings_overrides=settings)
-
 
     stats_file = os.path.join(out_path, 'paper_stats.json')
     d = options.cfg2dict(stats_file)
@@ -97,7 +98,7 @@ def rst2tex(in_path, out_path):
         print("Error: no paper configuration found")
 
     tex_file = os.path.join(out_path, 'paper.tex')
-    with open(tex_file, 'wb') as f:
+    with io.open(tex_file, mode='wb') as f:
         try:
             tex = tex.encode('utf-8')
         except (AttributeError, UnicodeDecodeError):
@@ -143,13 +144,13 @@ def tex2pdf_singlepass(out_path):
             )
     out, err = run.communicate()
 
-    if "Fatal" in out.decode() or run.returncode:
+    if b"Fatal" in out or run.returncode:
         print("PDFLaTeX error output:")
         print("=" * 80)
-        print(out.decode())
+        print(out)
         print("=" * 80)
         if err:
-            print(err.decode())
+            print(err)
             print("=" * 80)
 
         # Errors, exit early
@@ -169,12 +170,15 @@ def tex2pdf_singlepass(out_path):
                 cwd=out_path,
                 )
         out_bib, err = run.communicate()
-
-        if err:
+        if err or b'Error' in out_bib:
             print("Error compiling BiBTeX")
+            print("bibtex error output:")
+            print("=" * 80)
+            print(out_bib)
+            print("=" * 80)
             return out_bib, False
 
-    if "Label(s) may have changed." in out.decode():
+    if b"Label(s) may have changed." in out:
         return out, True
 
     return out, False
@@ -188,18 +192,17 @@ def page_count(pdflatex_stdout, paper_dir):
         print("*** WARNING: PDFLaTeX failed to generate output.")
         return
 
-    regexp = re.compile('Output written on paper.pdf \((\d+) pages')
+    regexp = re.compile(b'Output written on paper.pdf \((\d+) pages')
     cfgname = os.path.join(paper_dir, 'paper_stats.json')
 
     d = options.cfg2dict(cfgname)
 
     for line in pdflatex_stdout.splitlines():
-        m = regexp.match(line.decode())
+        m = regexp.match(line)
         if m:
             pages = m.groups()[0]
             d.update({'pages': int(pages)})
             break
-
     options.dict2cfg(d, cfgname)
 
 
