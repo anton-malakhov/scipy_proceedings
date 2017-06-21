@@ -6,15 +6,15 @@ Unfortunately  BLAS/LAPACK’s functions are too low level primitives and their 
 For high-level parallelism scikit-learn uses multiprocessing approach that is not very efficient from technical point of view.
 On the other hand Intel provides Intel |R| Data Analytics Acceleration Library (Intel |R| DAAL) that helps speed up big data analysis by providing highly optimized algorithmic building blocks for all stages of data analytics (preprocessing, transformation, analysis, modeling, validation, and decision making) in batch, online, and distributed processing modes of computation.
 It is originally written in C++ and provides Java and Python bindings.
-DAAL is heavily optimized for all Intel Architectures including Xeon Phi, but it is not at all clear how to use DAAL binding from Python.
+DAAL is heavily optimized for all Intel |R| Architectures including Intel |R| Xeon Phi |TM|, but it is not at all clear how to use DAAL binding from Python.
 DAAL bindings for python are generated automatically and reflects original C++ API very closely. This makes its usage quite complicated because of its use of non pythonic idioms and scarce documentation.
 
-In order to combine the power of well optimized native code with the familiar to machine learning community API the Intel Distribution for Python includes fruits of efforts of scikit-learn optimization. Thus beginning with Intel Distribution for Python 2017.0.2 includes scikit-learn with daal4sklearn sub-module.
-Specifically, update 2 optimizes Principal Component Analysis (PCA), Linear and Ridge Regressions, Correlation and Cosine Distances, and K-Means. Speedups may range from 1.5x to 160x.
+In order to combine the power of well optimized native code with the familiar to machine learning community API the Intel Distribution for Python includes fruits of efforts of scikit-learn optimization. Thus beginning with version 2017.0.2 the Intel Distribution for Python includes scikit-learn with daal4sklearn sub-module.
+Specifically, daal4sklearn optimizes Principal Component Analysis (PCA), Linear and Ridge Regressions, Correlation and Cosine Distances, and K-Means in scikit-learn using Intel |R| DAAL. Speedups may range from 1.5x to 160x.
 
-There are no direct matching between sklearn's and DAAL's APIs and they aren’t fully compatible for all inputs, therefore in cases when daal4sklearn detects incompatibility it fallbacks to original sklearn’s implementation.
+There is no direct matching between scikit-learn's and Intel |R| DAAL's APIs. Moreover, they aren’t fully compatible for all inputs, therefore in those cases where daal4sklearn detects incompatibility it falls back to original sklearn’s implementation.
 
-Daal4sklearn is enabled by default but provides simple API that allows disabling its functionality:
+Daal4sklearn is enabled by default and provides a simple API to toggle these optimizations:
 
 .. code-block:: python
 
@@ -22,7 +22,7 @@ Daal4sklearn is enabled by default but provides simple API that allows disabling
         dispatcher.disable()
         dispatcher.enable()
 
-We prepared several benchmarks to demonstrate performance that can be achieved with DAAL.
+We prepared several benchmarks to demonstrate performance that can be achieved with Intel |R| DAAL.
 
 .. code-block:: python
 
@@ -84,7 +84,7 @@ We prepared several benchmarks to demonstrate performance that can be achieved w
             train(X_local)
             print('')
 
-Using all 32 cores of Xeon E5-2698 v3 IDP’s K-Means can be faster more than 50 times comparing with python available on Ubuntu 14.04.
+Using all 32 cores of Intel |R| Xeon |R| processor E5-2698 v3 IDP’s K-Means can be more than 50 times faster than the python included with Ubuntu 14.04.
 P below means the number of CPU cores used.
 
 .. table:: 
