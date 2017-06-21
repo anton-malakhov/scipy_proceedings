@@ -42,7 +42,9 @@ As an example, a Logistic Regression function is given below:
     @jit(parallel=True)
     def logistic_regression(Y, X, w, iterations):
         for i in range(iterations):
-            w -= np.dot(((1.0 / (1.0 + np.exp(-Y * np.dot(X, w))) - 1.0) * Y), X)
+            w += np.dot(
+                   Y / (1.0 + np.exp(Y * np.dot(X, w))),
+                   X )
         return w
 
 We will not discuss details of the algorithm, but instead focus on how this program behaves with auto-parallelization:
