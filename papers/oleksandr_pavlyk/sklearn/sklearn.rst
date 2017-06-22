@@ -14,6 +14,12 @@ Specifically, daal4sklearn optimizes Principal Component Analysis (PCA), Linear 
 
 There is no direct matching between scikit-learn's and Intel |R| DAAL's APIs. Moreover, they aren’t fully compatible for all inputs, therefore in those cases where daal4sklearn detects incompatibility it falls back to original sklearn’s implementation.
 
+Originally scikit-learn uses multiprocessing approach to parallelize computation. 
+Unfortunately as the result it can have significant memory pollution as all cloned processes can use their own copy of all data.
+It leads to impossibility to effectivly utilize many-cores architectures as Intel |R| Xeon Phi |TM| for big workloads.
+On the other hand DAAL internally uses multi-threading approach sharing the same data across all cores that allows to work more economic 
+and to process bigger workloads that especially urgent for ML algorithms.  
+
 Daal4sklearn is enabled by default and provides a simple API to toggle these optimizations:
 
 .. code-block:: python
@@ -23,44 +29,9 @@ Daal4sklearn is enabled by default and provides a simple API to toggle these opt
         dispatcher.enable()
 
 We prepared several benchmarks to demonstrate performance that can be achieved with Intel |R| DAAL.
+There [sklearn_benches]_ you can see these benchmarks. There you can see small extract from these codes.
 
 .. code-block:: python
-
-        from __future__ import print_function
-        import timeit
-        from numpy.random import rand
-        from sklearn.cluster import KMeans
-
-        import argparse
-        argParser = argparse.ArgumentParser(
-            prog="kmeans_bench.py",
-            description="K-means benchmark")
-
-        argParser.add_argument('-i', '--iteration',
-              help="iteration", type=int, default=10)
-        argParser.add_argument('-p', '--proc', default=-1,
-              help="n_jobs for algorithm", type=int)
-        args = argParser.parse_args()
-
-        try:
-            from daal.services import Environment
-            env_inst = Environment.getInstance()
-            nThreadsInit = env_inst.getNumberOfThreads()
-            env_inst.setNumberOfThreads(args.proc)
-        except:
-            pass
-
-        def st_time(func):
-            def st_func(*args, **keyArgs):
-                times = []
-                for n in range(args.iteration):
-                    t1 = timeit.default_timer()
-                    r = func(*args, **keyArgs)
-                    t2 = timeit.default_timer()
-                    times.append(t2-t1)
-                print (min(times), end='')
-                return r
-            return st_func
 
         problem_sizes = [
                 (10000,  2),  (10000,  25),
