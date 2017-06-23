@@ -59,7 +59,7 @@ Accelerating Scientific Python with Intel Optimizations
 
 .. class:: keywords
 
-   numpy,scipy,sk-learn,numba,simd,parallel,optimization,performance
+   numpy,scipy,scikit-learn,numba,simd,parallel,optimization,performance
 
 Introduction
 ------------
