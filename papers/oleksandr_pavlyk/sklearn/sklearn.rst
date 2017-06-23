@@ -14,11 +14,11 @@ Specifically, daal4sklearn optimizes Principal Component Analysis (PCA), Linear 
 
 There is no direct matching between scikit-learn's and Intel |R| DAAL's APIs. Moreover, they aren’t fully compatible for all inputs, therefore in those cases where daal4sklearn detects incompatibility it falls back to original sklearn’s implementation.
 
-Originally scikit-learn uses multiprocessing approach to parallelize computation. 
-Unfortunately as the result it can have significant memory pollution as all cloned processes can use their own copy of all data.
-It leads to impossibility to effectivly utilize many-cores architectures as Intel |R| Xeon Phi |TM| for big workloads.
-On the other hand DAAL internally uses multi-threading approach sharing the same data across all cores that allows to work more economic 
-and to process bigger workloads that especially urgent for ML algorithms.  
+Scikit-learn uses multiprocessing approach to parallelize computations.
+The unfortunate consequence of this choice may be a large memory footprint as each cloned process has access to its own copy of all input data. 
+This precludes scikit-learn from effectivly utilizing many-cores architectures as Intel |R| Xeon Phi |TM| for big workloads.
+On the other hand DAAL internally uses multi-threading approach sharing the same data across all cores. 
+This allows to DAAL to use less memory and to process bigger workloads which especially important for ML algorithms.  
 
 Daal4sklearn is enabled by default and provides a simple API to toggle these optimizations:
 
@@ -28,20 +28,18 @@ Daal4sklearn is enabled by default and provides a simple API to toggle these opt
         dispatcher.disable()
         dispatcher.enable()
 
-We prepared several benchmarks to demonstrate performance that can be achieved with Intel |R| DAAL.
-There [sklearn_benches]_ you can see these benchmarks. There you can see small extract from these codes.
+Several benchmarks [sklearn_benches]_ were prepared to demonstrate performance that can be achieved with Intel |R| DAAL.
+A fragment from the benchmark used to measure performance of K-means is given below.  
 
 .. code-block:: python
 
         problem_sizes = [
-                (10000,  2),  (10000,  25),
-                (10000,  50), (50000,  2),
-                (50000,  25), (50000,  50),
-                (100000, 2),  (100000, 25),
-                (100000, 50)]
+                (10000,  2),  (10000,  25), (10000,  50), 
+                (50000,  2),  (50000,  25), (50000,  50),
+                (100000, 2),  (100000, 25), (100000, 50)]
         X={}
-        for p, n in problem_sizes:
-            X[(p,n)] = rand(p,n)
+        for rows, cols in problem_sizes:
+            X[(rows, cols)] = rand(rows, cols)
 
         kmeans = KMeans(n_clusters=10, n_jobs=args.proc)
 
@@ -49,9 +47,9 @@ There [sklearn_benches]_ you can see these benchmarks. There you can see small e
         def train(X):
             kmeans.fit(X)
 
-        for p, n in problem_sizes:
-            print (p,n, end=' ')
-            X_local = X[(p,n)]
+        for rows, cols in problem_sizes:
+            print (rows, cols, end=' ')
+            X_local = X[(rows, cols)]
             train(X_local)
             print('')
 
