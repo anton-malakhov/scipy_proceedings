@@ -34,6 +34,11 @@
 :institution: Intel Corporation
 :equal-contributor:
 
+:author: Sergey Maidanov
+:email: sergey.maidanov@intel.com
+:institution: Intel Corporation
+:equal-contributor:
+
 :year: 2017
 
 :video: http://www.youtube.com/watch?v=
