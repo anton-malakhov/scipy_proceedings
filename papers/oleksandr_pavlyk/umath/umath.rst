@@ -1,9 +1,9 @@
-One of the great benefits found in our Intel |R| Distribution for Python is the performance boost
+One of the great benefits found in our Intel |R| Distribution for Python* is the performance boost
 gained from leveraging SIMD and multithreading in (select) NumPy's UMath arithmetic and
-transcendental operations, on a range of Intel CPUs, from Intel |R| Core |TM| to Intel |R| Xeon
-|TM| & Intel |R| Xeon Phi |TM|. With stock python
-as our baseline, we demonstrate the scalability of Intel |R| Distribution for Python by using
-functions that are intensively used in financial math applications and machine learning:
+transcendental operations, on a range of Intel |R| CPUs, from Intel |R| Core |TM| to Intel |R| Xeon
+|TM| & Intel |R| Xeon Phi |TM|. With stock python as our baseline, we demonstrate the scalability of 
+Intel |R| Distribution for Python* by using functions that are intensively used in financial math 
+applications and machine learning:
 
 .. figure:: umath/speedup1.png
 
@@ -13,24 +13,22 @@ functions that are intensively used in financial math applications and machine l
 
 
 One can see that stock Python (pip-installed NumPy from PyPI) on Intel |R| Core |TM| i5 performs
-basic operations such as addition, subtraction, and multiplication just as well as Intel Python,
-but not on Intel |R| Xeon |TM| and Intel |R| Xeon Phi |TM|, where Intel Python adds at least
-another 10x speedup. This can be explained by the fact that basic arithmetic operations in stock
-NumPy are hard-coded AVX intrinsics (and thus already leverage SIMD, but do not scale to other ISA,
-e.g. AVX-512). These operations in stock Python also do not leverage multiple cores (i.e. no
+basic operations such as addition, subtraction, and multiplication just as well as Intel |R| Python,
+but not on Intel |R| Xeon |TM| and Intel |R| Xeon Phi |TM|, where Intel |R| Python provides over 10x speedup. 
+This can be explained by the fact that basic arithmetic operations in stock
+NumPy are hard-coded AVX intrinsics (and thus already leverage SIMD, but do not scale to other instruction 
+set architectures (ISA), e.g. AVX-512). These operations in stock Python also do not leverage multiple cores (i.e. no
 multi-threading of loops under the hood of NumPy exist with such operations). Intel Python's
-implementation allows for this scalability by utilizing the following: respective Intel |R| MKL VML
-primitives, which are CPU-dispatched (to leverage appropriate ISA) and multi-threaded (leverage
-multiple cores) under the hood, and Intel |R| SVML intrinsics, a compiler-provided short vector
+implementation allows for this scalability by utilizing both respective Intel |R| MKL VML
+CPU-dispatched and multi-threaded primitives under the hood, and Intel |R| SVML intrinsics - a compiler-provided short vector
 math library that vectorizes math functions for both IA-32 and Intel |R| 64-bit architectures on
 supported operating systems. Depending on the problem size, NumPy will choose one of the two
-approaches. On much smaller array sizes, Intel |R| SVML outperforms VML due to VML's inherent cost
-of setting up the environment to multi-thread loops. For any other problem size, VML outperforms
-SVML and this is thanks to VML's ability to both vectorize math functions and multi-thread loops.
+approaches. On small array sizes, Intel |R| SVML outperforms VML due to high library call overhead, but for 
+larger problem sizes, VML's ability to both vectorize math functions and multi-thread loops offsets the overhead.
 
 
-Specifically, on Intel |R| Core |R| i5 Intel Python delivers greater performance on transcendentals
-(log, exp, erf, etc.) due to utilizing both SIMD and multi-threading. We do not see any visible
+Specifically, on Intel |R| Core |R| i5 Intel |R| Python delivers greater performance on transcendentals
+(log, exp, erf, etc.) due to utilization of both SIMD and multi-threading. We do not see any visible
 benefit of multi-threading basic operations (as shown on the graph) unless NumPy arrays are very
 large (not shown on the graph). On Xeon |R|, the 10x-1000x boost is explained by leveraging both
 (a) AVX2 instructions in transcendentals and (b) multiple cores (32 in our setup). Even greater
@@ -54,11 +52,10 @@ stock Python). Intel Python delivers performance close to native speeds (90% of 
 big problem sizes.
 
 
-
 To demonstrate the benefits of vectorization and multi-threading in a real-world application, we
-chose to use the Black Scholes model, often used to estimate the price of financial derivatives
-like stock options. A Python implementation of the Black Scholes formula gives an idea of how NumPy
-UMath optimizations can be noticed on the application level:
+chose to use the Black Scholes model, used to estimate the price of financial derivatives, 
+specifically European vanilla stock options. A Python implementation of the Black Scholes formula 
+gives an idea of how NumPy UMath optimizations can be noticed at the application level:
 
 .. figure:: umath/black_scholes1.png
 
@@ -67,13 +64,12 @@ UMath optimizations can be noticed on the application level:
 .. figure:: umath/black_scholes3.png
 
 
-
 One can see that on Intel |R| Core |TM| i5 the Black Scholes Formula scales nicely with Intel
 Python on small problem sizes but does not perform well on bigger problem sizes, which is explained
 by small cache sizes. Stock Python does marginally scale due to leveraging AVX instructions on
-basic arithmetic operations, but this is a whole different story on Intel |R| Xeon |TM| and Intel
+basic arithmetic operations, but it is a whole different story on Intel |R| Xeon |TM| and Intel
 |R| Xeon Phi |TM|. With Intel Python running the same Python code on server processors, much
 greater scalability on much greater problem sizes is delivered. Intel |R| Xeon Phi |TM| scales
 better due to bigger number of cores and as expected, the stock Python does not scale on server
-processors due to the lack of AVX2/AVX-512 support for transcendentals and no multi-threading
-utilization.
+processors due to the lack of AVX2/AVX-512 support for transcendentals and no utilization of 
+multiple cores.
