@@ -71,7 +71,7 @@ alike to code their software in Python. The ability of this software to solve
 realistic problems in a reasonable time is aften hampered by inefficient use of 
 hardware resources. Intel Distribution for Python [IDP]_ attempts to enable 
 computation Python community with optimized computational packages,
-such as NumPy*, SciPy* and Scikit-learn* acriss a range of Intel |R| processors,
+such as NumPy*, SciPy*, Scikit-learn*, Numba* and PyDAAL across a range of Intel |R| processors,
 from Intel |R| Core |TM| CPUs to Intel |R| Xeon |R| and Intel |R| Xeon Phi |TM| processors.
 This paper offers a detailed report about optimization that went into the 
 Intel |R| Distribution for Python*, which might be interesting for developers of SciPy tools.
