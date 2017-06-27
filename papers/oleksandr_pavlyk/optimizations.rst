@@ -49,7 +49,7 @@ Accelerating Scientific Python with Intel Optimizations
 
 .. class:: abstract
 
-    It is well known that the performance difference between Python and basic C code can be up 200x,
+    It is well-known that the performance difference between Python and basic C code can be up 200x,
     but for numerically intensive code another speed-up factor of 240x or even greater is possible.
     The performance comes from software's ability to take advantage of your CPU's multiple cores,
     single instruction multiple data (SIMD) instructions, and high performance caches.
