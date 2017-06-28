@@ -39,8 +39,7 @@ Let's see how it works for small example:
 
     import math
     import numpy as np
-    from timeit import timeit
-    from numba import njit, vectorize, guvectorize
+    from numba import njit
 
     def foo(x,y):
         for i in range(x.size):
@@ -122,9 +121,17 @@ We can see direct call into svml library:
 
 So having enabled svml high accuracy functions this jitted code can work more than 4x times faster than with usual libm's code.
 
+svml enabled:
+
 .. code-block:: python
 
     %timeit foo_compiled(x,y)
-    1000 loops, best of 3: 403 us per loop # with svml enabled
-    1000 loops, best of 3: 1.72 ms per loop #with svml disabled
+    1000 loops, best of 3: 403 us per loop
+
+svml disabled:
+
+.. code-block:: python
+
+    %timeit foo_compiled(x,y)
+    1000 loops, best of 3: 1.72 ms per loop
 
