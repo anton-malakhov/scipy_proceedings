@@ -33,7 +33,7 @@ Besides intrinsics available with Intel |R| compiler there is opportunity to cal
 
 Beginning with version 4.0 LLVM features (experimental) model of autovectorization using SVML library, so a full stack of technologies is now available to exploit in-core parallelization of python code.
 
-Let's see how it works for small example:
+Let's see how it works with a small example:
 
 .. code-block:: python
 
@@ -46,7 +46,7 @@ Let's see how it works for small example:
             y[i] = math.sin(x[i])
     foo_compiled = njit(foo)
 
-Inspite the fact that numba generates call for usual sin function:
+Inspite of the fact that numba generates call for usual ``sin`` function:
 
 .. code-block:: LLVM
     
@@ -76,7 +76,7 @@ Inspite the fact that numba generates call for usual sin function:
         jump 16                                  []
 
     
-We can see direct call into svml library:
+We can see direct use of the SVML-provided vector implementation of sine function:
 
 .. code-block:: Asm
     
@@ -119,7 +119,7 @@ We can see direct call into svml library:
             addq    $-16, %r13
             jne     .LBB0_13
 
-So having enabled svml high accuracy functions this jitted code can work more than 4x times faster than with usual libm's code.
+Thanks to enabled support of high accuracy SVML functions in LLVM this jitted code sees more than 4x increase in performance.
 
 svml enabled:
 
