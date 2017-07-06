@@ -55,7 +55,7 @@ Accelerating Scientific Python with Intel Optimizations
     single instruction multiple data (SIMD) instructions, and high performance caches.
     The article describes optimizations, included in Intel |R| Distribution for Python*, aimed to
     automatically boost performance of numerically intensive code.
-    This talk is intended for Python programmers who want to get the most out of their hardware
+    This paper is intended for Python programmers who want to get the most out of their hardware
     but do not have time or expertise to re-code their applications using techniques such as native 
     extensions or Cython.
 
