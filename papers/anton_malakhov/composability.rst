@@ -53,11 +53,10 @@ In fact, there is a number of issues that can seriously affect parallel processi
 
 In particular, the infamous Python's global interpreter lock [GIL]_ effectively serializes multiple threads and, therefore, makes it challenging to scale an interpreter-dependent code with threads.
 As a result, developers turn their attention to multiple isolated processes that let them avoid GIL issues at a price of memory-related overhead.
-
 However, when it comes to numeric computations with libraries like Numpy,
-most of the time is spent in C extensions with no access to Python data structures.
-The GIL can be released during such computations, which enables better scaling of compute-intensive applications.
-Thus, both multi-processing and multi-threading approaches are valuable for Python users and have their own areas of applicability.
+most of the time is spent in the so-called C extensions with no access to Python data structures.
+As a result, the GIL can be released during such computations thus allowing for better scaling of compute-intensive applications.
+Therefore, both multi-processing and multi-threading approaches are valuable for Python users and have their own areas of applicability.
 
 .. [GIL] David Beazley, "Understanding the Python GIL", PyCON Python Conference, Atlanta, Georgia, 2010.
          http://www.dabeaz.com/python/UnderstandingGIL.pdf
