@@ -33,6 +33,8 @@ project:
     PCR: Polymerase Chain Reaction
     rRNA: Ribosomal ribonucleic acid
     GIN: Greenland, Iceland, and Norwegian
+    RF: Robinson-Foulds
+    nRF: normalized Robinson-Foulds
   # It is possible to explicitly ignore the `doi-exists` check for certain citation keys
   error_rules:
     - rule: doi-exists
